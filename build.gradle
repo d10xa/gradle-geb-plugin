@@ -1,0 +1,15 @@
+group 'ru.d10xa'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+    testCompile 'junit:junit:4.12'
+    compile 'commons-io:commons-io:2.4'
+}

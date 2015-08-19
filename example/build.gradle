@@ -1,0 +1,15 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath "ru.d10xa:gradle-geb-plugin:1.0-SNAPSHOT"
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'ru.d10xa.geb'
+
+repositories {
+    jcenter()
+}

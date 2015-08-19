@@ -1,0 +1,36 @@
+plugins {
+    id "com.jfrog.bintray" version "1.2"
+}
+
+apply from: 'build.gradle'
+
+
+configurations {
+    published
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    published sourceJar
+}
+
+bintray {
+    user = this.hasProperty('bintrayUser') ? bintrayUser : ''
+    key = this.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
+    configurations = ['published', 'archives']
+    publish = true
+    pkg {
+        repo = 'maven'
+        labels = ['geb', 'gradle', 'plugin', 'testing']
+        name = 'ru.d10xa:gradle-geb-plugin'
+        licenses = ['Apache-2.0']
+        version {
+            name = project.version
+            attributes = ['gradle-plugin': 'ru.d10xa.geb:ru.d10xa:gradle-geb-plugin']
+        }
+    }
+}
