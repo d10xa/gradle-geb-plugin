@@ -1,8 +1,11 @@
 group 'ru.d10xa'
-version '1.0'
+version '1.0.1'
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
+
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
 
 repositories {
     jcenter()
@@ -12,4 +15,6 @@ dependencies {
     compile gradleApi()
     testCompile 'junit:junit:4.12'
     compile 'commons-io:commons-io:2.4'
+    compile 'org.gebish:geb-core:0.10.0'
+    compile 'org.seleniumhq.selenium:selenium-chrome-driver:2.46.0'
 }

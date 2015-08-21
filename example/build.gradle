@@ -1,16 +1,30 @@
+import ru.d10xa.geb.GebTask
+
 buildscript {
     repositories {
         maven { url 'https://dl.bintray.com/d10xa/maven'}
         jcenter()
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:1.0"
+        classpath "ru.d10xa:gradle-geb-plugin:1.0.1"
     }
 }
-
 apply plugin: 'groovy'
 apply plugin: 'ru.d10xa.geb'
 
 repositories {
     jcenter()
+}
+
+task wikipedia(type: GebTask) << {
+    drive {
+        go 'https://ya.ru/'
+        $('#text') << 'wikipedia'
+
+        waitFor {
+            $('span', text: contains('ru.wikipedia.org'))
+        }.click()
+
+        sleep(3000)
+    }
 }

@@ -17,7 +17,6 @@ class GebPlugin implements Plugin<Project> {
 
         project.with {
             afterEvaluate {
-
                 geb.with {
                     chromeDriverVersion = chromeDriverVersion ?: '2.10'
                     groovyVersion = groovyVersion ?: '2.4.4'
@@ -25,37 +24,50 @@ class GebPlugin implements Plugin<Project> {
                     seleniumVersion = seleniumVersion ?: '2.46.0'
                     phantomJsVersion = phantomJsVersion ?: '1.9.8'
                 }
-
                 dependencies {
-                    testCompile "org.gebish:geb-spock:${geb.gebVersion}"
-                    testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
-                        exclude group: "org.codehaus.groovy"
-                    }
-                    testCompile "org.codehaus.groovy:groovy-all:${geb.groovyVersion}"
+                    dependencies {
+                        testCompile "org.gebish:geb-spock:${geb.gebVersion}"
+                        testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
+                            exclude group: "org.codehaus.groovy"
+                        }
+                        testCompile "org.codehaus.groovy:groovy-all:${geb.groovyVersion}"
 
-                    // If using JUnit, need to depend on geb-junit (3 or 4)
-                    testCompile "org.gebish:geb-junit4:${geb.gebVersion}"
+                        // If using JUnit, need to depend on geb-junit (3 or 4)
+                        testCompile "org.gebish:geb-junit4:${geb.gebVersion}"
 
-                    // Drivers
-                    testCompile "org.seleniumhq.selenium:selenium-support:${geb.seleniumVersion}"//for <select/>
-                    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:${geb.seleniumVersion}"
-                    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:${geb.seleniumVersion}"
-                    testCompile("com.github.detro.ghostdriver:phantomjsdriver:1.1.0") {
-                        // phantomjs driver pulls in a different selenium version
-                        transitive = false
+                        // Drivers
+                        testCompile "org.seleniumhq.selenium:selenium-support:${geb.seleniumVersion}"//for <select/>
+                        testCompile "org.seleniumhq.selenium:selenium-chrome-driver:${geb.seleniumVersion}"
+                        testCompile "org.seleniumhq.selenium:selenium-firefox-driver:${geb.seleniumVersion}"
+                        testCompile("com.github.detro.ghostdriver:phantomjsdriver:1.1.0") {
+                            // phantomjs driver pulls in a different selenium version
+                            transitive = false
+                        }
                     }
                 }
-
             }
+        }
 
+        project.with {
             downloadChromeDriver = project.task(type: DownloadChromeDriverTask, DownloadChromeDriverTask.NAME)
+//
             unzipChromeDriver = project.task(type: UnzipChromeDriverTask, UnzipChromeDriverTask.NAME)
             chromeTest = project.task(type: ChromeTestTask, ChromeTestTask.NAME)
 
-            chromeTest.dependsOn 'unzipChromeDriver'
-            unzipChromeDriver.dependsOn 'downloadChromeDriver'
+            unzipChromeDriver.outputs.upToDateWhen {false}
+            chromeTest.dependsOn unzipChromeDriver
+            unzipChromeDriver.dependsOn downloadChromeDriver
+
+            tasks.test.dependsOn chromeTest
+            tasks.test.enabled = false
+
             groupTasks()
+
+            gradle.buildFinished {
+                geb.closeBrowser()
+            }
         }
+
     }
 
     def groupTasks() {
