@@ -3,7 +3,6 @@ package ru.d10xa.geb
 import geb.Browser
 import groovy.transform.ToString
 import org.gradle.api.Project
-import org.openqa.selenium.chrome.ChromeDriver
 
 @ToString
 class GebExtension {
@@ -28,11 +27,16 @@ class GebExtension {
 
     public Browser getBrowser() {
         if (!browser) {
-            def driver = new ChromeDriver() ?: Class.forName(System.getProperty('geb.driver'))
+//            System.setProperty "webdriver.chrome.driver", new ChromeConfig(project: project).driverPath
+            def driver = Class.forName(driverClassName).newInstance()
             browser = new Browser(driver: driver)
             usedBrowser = true
         }
         browser
+    }
+
+    private def getDriverClassName() {
+        System.getProperty('geb.driver') ?: ChromeConfig.PROPERTY_DRIVER_CLASSNAME
     }
 
     public void closeBrowser() {
