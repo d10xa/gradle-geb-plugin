@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:1.0.2"
+        classpath "ru.d10xa:gradle-geb-plugin:1.0.3"
     }
 }
 apply plugin: 'groovy'
@@ -14,6 +14,10 @@ apply plugin: 'ru.d10xa.geb'
 
 repositories {
     jcenter()
+}
+
+geb {
+    defaultTestBrowser = 'firefox'
 }
 
 task wikipedia(type: GebTask)

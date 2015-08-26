@@ -18,6 +18,7 @@ class GebExtension {
     def gebVersion
     def seleniumVersion
     def phantomJsVersion
+    def defaultTestBrowser
 
     boolean usedBrowser = false
 
@@ -37,7 +38,7 @@ class GebExtension {
     }
 
     private def getDriverClassName() {
-        System.getProperty('geb.driver') ?: ChromeConfig.PROPERTY_DRIVER_CLASSNAME
+        System.getProperty('geb.driver') ?: ChromeConfig.GEB_DRIVER
     }
 
     public void closeBrowser() {

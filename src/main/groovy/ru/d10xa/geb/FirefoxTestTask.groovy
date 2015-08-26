@@ -2,12 +2,11 @@ package ru.d10xa.geb
 
 import org.gradle.api.tasks.testing.Test
 
-class ChromeTestTask extends Test {
+class FirefoxTestTask extends Test {
 
-    static final String NAME = 'chromeTest'
+    static final String NAME = 'firefoxTest'
 
-    ChromeTestTask() {
-
+    FirefoxTestTask() {
         outputs.upToDateWhen { false }
 
         project.with {
@@ -16,10 +15,7 @@ class ChromeTestTask extends Test {
                 junitXml.destination = new File("$buildDir/test-results/$name")
             }
             systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
-            systemProperty "geb.env", 'chrome'
-
-            systemProperty "geb.driver", ChromeConfig.GEB_DRIVER
-            systemProperty "webdriver.chrome.driver", new ChromeConfig(project: project).driverPath
+            systemProperty "geb.env", 'firefox'
         }
     }
 

@@ -6,6 +6,7 @@ import org.gradle.api.Project
 class GebPlugin implements Plugin<Project> {
 
     ChromeTestTask chromeTest
+    FirefoxTestTask firefoxTest
     UnzipChromeDriverTask unzipChromeDriver
     DownloadChromeDriverTask downloadChromeDriver
 
@@ -24,6 +25,14 @@ class GebPlugin implements Plugin<Project> {
                     gebVersion = gebVersion ?: '0.10.0'
                     seleniumVersion = seleniumVersion ?: '2.46.0'
                     phantomJsVersion = phantomJsVersion ?: '1.9.8'
+                }
+                switch (geb.defaultTestBrowser) {
+                    case 'firefox':
+                        tasks.test.dependsOn firefoxTest
+                        break
+                    default:
+                        tasks.test.dependsOn chromeTest
+                        break
                 }
                 dependencies {
                     dependencies {
@@ -51,18 +60,18 @@ class GebPlugin implements Plugin<Project> {
 
         project.with {
             downloadChromeDriver = project.task(type: DownloadChromeDriverTask, DownloadChromeDriverTask.NAME)
-//
+
             unzipChromeDriver = project.task(type: UnzipChromeDriverTask, UnzipChromeDriverTask.NAME)
             chromeTest = project.task(type: ChromeTestTask, ChromeTestTask.NAME)
+            firefoxTest = project.task(type: FirefoxTestTask, FirefoxTestTask.NAME)
 
-            unzipChromeDriver.outputs.upToDateWhen {false}
+            unzipChromeDriver.outputs.upToDateWhen { false }
             chromeTest.dependsOn unzipChromeDriver
             unzipChromeDriver.dependsOn downloadChromeDriver
 
-            tasks.test.dependsOn chromeTest
             tasks.test.enabled = false
 
-            tasks.withType(GebTask){
+            tasks.withType(GebTask) {
                 it.dependsOn unzipChromeDriver
             }
 

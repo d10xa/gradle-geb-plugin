@@ -1,5 +1,5 @@
 group 'ru.d10xa'
-version '1.0.2'
+version '1.0.3'
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
