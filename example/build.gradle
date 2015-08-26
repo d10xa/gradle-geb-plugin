@@ -2,7 +2,7 @@ import ru.d10xa.geb.GebTask
 
 buildscript {
     repositories {
-        maven { url 'https://dl.bintray.com/d10xa/maven'}
+        maven { url 'https://dl.bintray.com/d10xa/maven' }
         jcenter()
     }
     dependencies {
@@ -16,7 +16,9 @@ repositories {
     jcenter()
 }
 
-task wikipedia(type: GebTask) << {
+task wikipedia(type: GebTask)
+
+wikipedia << {
     drive {
         go 'https://ya.ru/'
         $('#text') << 'wikipedia'
