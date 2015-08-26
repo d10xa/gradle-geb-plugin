@@ -2,12 +2,11 @@ import ru.d10xa.geb.GebTask
 
 buildscript {
     repositories {
-//        maven { url 'https://dl.bintray.com/d10xa/maven'}
-        mavenLocal()
+        maven { url 'https://dl.bintray.com/d10xa/maven'}
         jcenter()
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:1.0.2-SNAPSHOT"
+        classpath "ru.d10xa:gradle-geb-plugin:1.0.2"
     }
 }
 apply plugin: 'groovy'
