@@ -4,7 +4,6 @@ class OsUtils {
 
     static boolean isMacOs() {
         String osString = System.properties['os.name'].toLowerCase()
-        println "osString = $osString"
         osString.contains("mac os x") || osString.contains("darwin")
     }
 

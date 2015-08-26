@@ -13,11 +13,11 @@ class GebExtension {
 
     Project project
 
-    def chromeDriverVersion = '2.10'
-    def groovyVersion = '2.4.3'
-    def gebVersion = '0.10.0'
-    def seleniumVersion = '2.46.0'
-    def phantomJsVersion = '1.9.8'
+    def chromeDriverVersion
+    def groovyVersion
+    def gebVersion
+    def seleniumVersion
+    def phantomJsVersion
 
     boolean usedBrowser = false
 
@@ -27,7 +27,8 @@ class GebExtension {
 
     public Browser getBrowser() {
         if (!browser) {
-//            System.setProperty "webdriver.chrome.driver", new ChromeConfig(project: project).driverPath
+            def config = new ChromeConfig(project: project)
+            System.setProperty ChromeConfig.PROPERTY_WEBDRIVER_PATH, config.driverPath
             def driver = Class.forName(driverClassName).newInstance()
             browser = new Browser(driver: driver)
             usedBrowser = true

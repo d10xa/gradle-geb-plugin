@@ -9,11 +9,12 @@ class GebPlugin implements Plugin<Project> {
     UnzipChromeDriverTask unzipChromeDriver
     DownloadChromeDriverTask downloadChromeDriver
 
-    GebExtension geb = new GebExtension()
+    GebExtension geb
 
     @Override
     void apply(Project project) {
-        project.extensions.add('geb', geb)
+        geb = new GebExtension(project)
+        project.extensions.add(GebExtension.NAME, geb)
 
         project.with {
             afterEvaluate {
@@ -60,6 +61,10 @@ class GebPlugin implements Plugin<Project> {
 
             tasks.test.dependsOn chromeTest
             tasks.test.enabled = false
+
+            tasks.withType(GebTask){
+                it.dependsOn unzipChromeDriver
+            }
 
             groupTasks()
 
