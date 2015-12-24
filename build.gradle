@@ -1,8 +1,15 @@
-group 'ru.d10xa'
-version '1.0.3'
+plugins {
+    id 'groovy'
+    id 'maven'
+    id 'idea'
+    id 'maven-publish'
+    id "com.jfrog.bintray" version "1.4"
+}
 
-apply plugin: 'groovy'
-apply plugin: 'maven'
+group 'ru.d10xa'
+version '1.0.4-SNAPSHOT'
+
+apply from: 'gradle/bintray.gradle'
 
 sourceCompatibility = 1.5
 targetCompatibility = 1.5
