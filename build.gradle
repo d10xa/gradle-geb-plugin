@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'ru.d10xa'
-version '1.0.4-SNAPSHOT'
+version '1.0.4'
 
 apply from: 'gradle/bintray.gradle'
 
