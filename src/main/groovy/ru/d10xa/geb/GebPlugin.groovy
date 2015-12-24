@@ -86,6 +86,7 @@ class GebPlugin implements Plugin<Project> {
 
     def groupTasks() {
         chromeTest.group = 'geb'
+        firefoxTest.group = 'geb'
         unzipChromeDriver.group = 'geb'
         downloadChromeDriver.group = 'geb'
     }
