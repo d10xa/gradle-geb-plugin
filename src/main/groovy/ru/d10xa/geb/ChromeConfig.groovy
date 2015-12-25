@@ -1,7 +1,9 @@
 package ru.d10xa.geb
 
+import groovy.transform.CompileStatic
 import org.gradle.api.Project
 
+@CompileStatic
 class ChromeConfig {
 
     static final String GEB_DRIVER = 'org.openqa.selenium.chrome.ChromeDriver'

@@ -1,11 +1,13 @@
 package ru.d10xa.geb
 
+import groovy.transform.CompileStatic
 import org.apache.commons.io.FileUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
 import static ru.d10xa.geb.OsUtils.*
 
+@CompileStatic
 class DownloadChromeDriverTask extends DefaultTask {
 
     static final String NAME = 'downloadChromeDriver'
@@ -19,7 +21,7 @@ class DownloadChromeDriverTask extends DefaultTask {
 
     @TaskAction
     void run() {
-        GebExtension geb = project.extensions.getByName(GebExtension.NAME)
+        GebExtension geb = project.extensions.getByName(GebExtension.NAME) as GebExtension
         def driverOsFilenamePart
         if (isWindows()) {
             driverOsFilenamePart = "win32"

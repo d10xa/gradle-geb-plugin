@@ -7,7 +7,7 @@ import org.gradle.api.Project
 @ToString
 class GebExtension {
 
-    static final NAME = 'geb'
+    static final String NAME = 'geb'
 
     Browser browser
 
