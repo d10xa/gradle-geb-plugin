@@ -9,7 +9,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:1.0.3"
+        classpath "ru.d10xa:gradle-geb-plugin:1.0.4"
     }
 }
 apply plugin: 'groovy'
