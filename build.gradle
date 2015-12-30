@@ -20,8 +20,13 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    testCompile 'junit:junit:4.12'
     compile 'commons-io:commons-io:2.4'
-    compile 'org.gebish:geb-core:0.10.0'
+    compile('org.gebish:geb-core:0.10.0') {
+        exclude(module: 'groovy-all')
+    }
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:2.46.0'
+    testCompile 'junit:junit:4.12'
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+        exclude(module: 'groovy-all')
+    }
 }
