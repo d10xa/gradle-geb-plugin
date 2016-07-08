@@ -32,4 +32,4 @@ geb {
 }
 ```
 
-[read more at d10xa.ru](http://d10xa.ru/2015/09/geb-getting-started/)
+[read more at d10xa.ru](http://d10xa.ru/2015/09/geb-getting-started)
