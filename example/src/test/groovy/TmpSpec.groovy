@@ -2,11 +2,15 @@ import geb.spock.GebSpec
 
 class TmpSpec extends GebSpec {
 
-    void 'tmp case'(){
-        go "http://localhost:8080"
-        sleep(100)
+    def indexHtml = "file://${System.getProperty('projectDir')}/site/index.html"
 
-        expect:
-        true
+    void 'tmp case'() {
+        when:
+        go indexHtml
+
+        then:
+        title == "test page"
+        $('p', id: 'greeting').text() == "Hello World"
     }
+
 }

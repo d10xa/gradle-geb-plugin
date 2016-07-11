@@ -7,9 +7,7 @@ class ChromeTestTask extends Test {
     static final String NAME = 'chromeTest'
 
     ChromeTestTask() {
-
         outputs.upToDateWhen { false }
-
         project.with {
             reports {
                 html.destination = reporting.file("$name/tests")
@@ -19,8 +17,13 @@ class ChromeTestTask extends Test {
             systemProperty "geb.env", 'chrome'
 
             systemProperty "geb.driver", ChromeConfig.GEB_DRIVER
-            systemProperty "webdriver.chrome.driver", new ChromeConfig(project: project).driverPath
         }
+    }
+
+    @Override
+    void executeTests() {
+        systemProperty "webdriver.chrome.driver", new ChromeConfig(project: project).driverPath
+        super.executeTests()
     }
 
 }

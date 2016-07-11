@@ -13,11 +13,31 @@ class GebExtension {
 
     Project project
 
-    def chromeDriverVersion
-    def groovyVersion
-    def gebVersion
-    def seleniumVersion
-    def phantomJsVersion
+    /**
+     * https://sites.google.com/a/chromium.org/chromedriver/downloads
+     */
+    def chromeDriverVersion = '2.22'
+
+    /**
+     * http://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all
+     */
+    def groovyVersion = '2.4.7'
+
+    /**
+     * http://mvnrepository.com/artifact/org.gebish/geb-core
+     */
+    def gebVersion = '0.13.1'
+
+    /**
+     * http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api
+     */
+    def seleniumVersion = '2.53.1'
+
+    /**
+     * not implemented
+     */
+    def phantomJsVersion = '1.9.8'
+
     def defaultTestBrowser
 
     boolean usedBrowser = false
@@ -37,7 +57,7 @@ class GebExtension {
         browser
     }
 
-    private def getDriverClassName() {
+    private static def getDriverClassName() {
         System.getProperty('geb.driver') ?: ChromeConfig.GEB_DRIVER
     }
 
@@ -45,6 +65,10 @@ class GebExtension {
         if (usedBrowser) {
             browser.quit()
         }
+    }
+
+    String getChromeDriverVersionWithUnderscores() {
+        "$chromeDriverVersion".replace(".", "_")
     }
 
 }

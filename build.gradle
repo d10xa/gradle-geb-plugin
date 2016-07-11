@@ -4,6 +4,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id "com.jfrog.bintray" version "1.4"
+    id 'java-gradle-plugin'
 }
 
 group 'ru.d10xa'
@@ -19,7 +20,6 @@ repositories {
 }
 
 dependencies {
-    compile gradleApi()
     compile 'commons-io:commons-io:2.4'
     compile('org.gebish:geb-core:0.10.0') {
         exclude(module: 'groovy-all')

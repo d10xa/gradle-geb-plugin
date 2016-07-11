@@ -9,7 +9,7 @@ class ChromeConfig {
     static final String GEB_DRIVER = 'org.openqa.selenium.chrome.ChromeDriver'
     static final String PROPERTY_WEBDRIVER_PATH = 'webdriver.chrome.driver'
 
-    Project project;
+    Project project
 
     String getDriverPath() {
         def chromedriverFilename = OsUtils.isWindows() ? "chromedriver.exe" : "chromedriver"

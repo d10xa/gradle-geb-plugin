@@ -1,14 +1,25 @@
 import ru.d10xa.geb.GebTask
 
+// Uncomment "mavenLocal()" and "classpath "ru.d10xa..." for development
+// For example:
+// ./gradlew clean build -x test publishToMavenLocal && ./gradlew -p example chromeTest
+
 buildscript {
     repositories {
+        // mavenLocal()
         maven { url 'https://dl.bintray.com/d10xa/maven' }
         jcenter()
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:1.0.3"
+        classpath "ru.d10xa:gradle-geb-plugin:1.0.4"
+        // classpath "ru.d10xa:gradle-geb-plugin:1.0.5-SNAPSHOT"
     }
 }
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, "seconds"
+}
+
 apply plugin: 'groovy'
 apply plugin: 'ru.d10xa.geb'
 
@@ -17,6 +28,9 @@ repositories {
 }
 
 geb {
+    chromeDriverVersion = "2.22"
+    gebVersion = '0.13.1'
+    seleniumVersion = '2.53.1'
     defaultTestBrowser = 'firefox'
 }
 
@@ -31,6 +45,8 @@ wikipedia << {
             $('span', text: contains('ru.wikipedia.org'))
         }.click()
 
-        sleep(3000)
+        sleep(2000)
     }
 }
+
+tasks.withType(Test)*.systemProperty ("projectDir", projectDir)

@@ -48,4 +48,5 @@ class DownloadChromeDriverSpec extends Specification {
     String getExpectedChromeDriverKey() {
         "$chromeDriverVersion/chromedriver_${driverOsFilenamePart}.zip"
     }
+
 }

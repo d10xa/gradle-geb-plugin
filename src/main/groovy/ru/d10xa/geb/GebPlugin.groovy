@@ -19,13 +19,6 @@ class GebPlugin implements Plugin<Project> {
 
         project.with {
             afterEvaluate {
-                geb.with {
-                    chromeDriverVersion = chromeDriverVersion ?: '2.10'
-                    groovyVersion = groovyVersion ?: '2.4.4'
-                    gebVersion = gebVersion ?: '0.10.0'
-                    seleniumVersion = seleniumVersion ?: '2.46.0'
-                    phantomJsVersion = phantomJsVersion ?: '1.9.8'
-                }
                 switch (geb.defaultTestBrowser) {
                     case 'firefox':
                         tasks.test.dependsOn firefoxTest
