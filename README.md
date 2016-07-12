@@ -11,7 +11,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:1.0.4"
+        classpath "ru.d10xa:gradle-geb-plugin:1.0.5"
     }
 }
 apply plugin: 'groovy'
@@ -23,10 +23,10 @@ repositories {
 
 // Optional
 geb {
-    chromeDriverVersion = '2.20'
-    groovyVersion = '2.4.5'
-    gebVersion = '0.12.2'
-    seleniumVersion = '2.48.2'
+    chromeDriverVersion = '2.22'
+    groovyVersion = '2.4.7'
+    gebVersion = '0.13.1'
+    seleniumVersion = '2.53.1'
     defaultTestBrowser = 'firefox'
 //  defaultTestBrowser = 'chrome'
 }
