@@ -6,9 +6,6 @@ import org.gradle.api.Project
 @CompileStatic
 class ChromeConfig {
 
-    static final String GEB_DRIVER = 'org.openqa.selenium.chrome.ChromeDriver'
-    static final String PROPERTY_WEBDRIVER_PATH = 'webdriver.chrome.driver'
-
     Project project
 
     String getDriverPath() {

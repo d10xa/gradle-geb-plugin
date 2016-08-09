@@ -49,16 +49,27 @@ class GebExtension {
     public Browser getBrowser() {
         if (!browser) {
             def config = new ChromeConfig(project: project)
-            System.setProperty ChromeConfig.PROPERTY_WEBDRIVER_PATH, config.driverPath
-            def driver = Class.forName(driverClassName).newInstance()
+            def driver = null
+            switch (project.extensions.getByType(ru.d10xa.geb.GebExtension).defaultTestBrowser){
+                case 'chrome':
+                    System.setProperty "geb.env", 'chrome'
+                    System.setProperty "geb.driver", 'org.openqa.selenium.chrome.ChromeDriver'
+                    System.setProperty "webdriver.chrome.driver", new ChromeConfig(project:project).driverPath
+                    driver = Class.forName('org.openqa.selenium.chrome.ChromeDriver').newInstance()
+                    break;
+                case 'firefox':
+                default:
+                    System.setProperty "geb.env", 'firefox'
+                    System.setProperty "geb.driver", 'org.openqa.selenium.firefox.FirefoxDriver'
+                    driver = Class.forName('org.openqa.selenium.firefox.FirefoxDriver').newInstance()
+                    break
+            }
             browser = new Browser(driver: driver)
-            usedBrowser = true
+            if(browser){
+                usedBrowser = true
+            }
         }
         browser
-    }
-
-    private static def getDriverClassName() {
-        System.getProperty('geb.driver') ?: ChromeConfig.GEB_DRIVER
     }
 
     public void closeBrowser() {
