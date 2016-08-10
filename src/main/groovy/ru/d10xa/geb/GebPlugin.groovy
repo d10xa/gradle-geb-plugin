@@ -19,6 +19,13 @@ class GebPlugin implements Plugin<Project> {
 
         project.with {
             afterEvaluate {
+                String selectedBrowser = project.extensions.getByType(GebExtension).defaultTestBrowser
+                logger.info("selected browser $selectedBrowser")
+
+                if (selectedBrowser == 'chrome') {
+                    tasks.getByName('test').dependsOn 'unzipChromeDriver'
+                }
+
                 tasks.getByName('test') {
                     doFirst {
                         reports {
@@ -26,9 +33,6 @@ class GebPlugin implements Plugin<Project> {
                             junitXml.destination = new File("$buildDir/test-results/$name")
                         }
                         systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
-
-                        String selectedBrowser = project.extensions.getByType(GebExtension).defaultTestBrowser
-                        logger.info("selected browser $selectedBrowser")
 
                         switch (selectedBrowser) {
                             case 'chrome':
@@ -70,7 +74,7 @@ class GebPlugin implements Plugin<Project> {
         }
 
         project.with {
-            test.outputs.upToDateWhen { false }
+            tasks.getByName('test').outputs.upToDateWhen { false }
 
             downloadChromeDriver = project.task(type: DownloadChromeDriverTask, DownloadChromeDriverTask.NAME)
             unzipChromeDriver = project.task(type: UnzipChromeDriverTask, UnzipChromeDriverTask.NAME)
@@ -79,7 +83,6 @@ class GebPlugin implements Plugin<Project> {
             unzipChromeDriver.outputs.upToDateWhen { false }
             chromeTest.dependsOn unzipChromeDriver
             unzipChromeDriver.dependsOn downloadChromeDriver
-
 
             tasks.withType(GebTask) {
                 it.dependsOn unzipChromeDriver
