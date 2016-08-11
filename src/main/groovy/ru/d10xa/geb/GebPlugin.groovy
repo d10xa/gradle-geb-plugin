@@ -3,10 +3,12 @@ package ru.d10xa.geb
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.tasks.testing.Test
 
 class GebPlugin implements Plugin<Project> {
 
     Task chromeTest
+    Task chromeDockerTest
     Task firefoxTest
     Task unzipChromeDriver
     Task downloadChromeDriver
@@ -19,35 +21,24 @@ class GebPlugin implements Plugin<Project> {
 
         project.with {
             afterEvaluate {
-                String selectedBrowser = project.extensions.getByType(GebExtension).defaultTestBrowser
-                logger.info("selected browser $selectedBrowser")
-
-                if (selectedBrowser == 'chrome') {
-                    tasks.getByName('test').dependsOn 'unzipChromeDriver'
-                }
-
+                tasks.getByName('test').dependsOn 'unzipChromeDriver'
                 tasks.getByName('test') {
                     doFirst {
+                        String selectedBrowser = project.extensions.getByType(GebExtension).defaultTestBrowser
                         reports {
                             html.destination = reporting.file("$name/tests")
                             junitXml.destination = new File("$buildDir/test-results/$name")
                         }
+
                         systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
 
-                        switch (selectedBrowser) {
-                            case 'chrome':
-                                systemProperty "geb.env", 'chrome'
-                                systemProperty "geb.driver", 'org.openqa.selenium.chrome.ChromeDriver'
-                                systemProperty "webdriver.chrome.driver", new ChromeConfig(project: project).driverPath
-                                break;
-                            case 'firefox':
-                            default:
-                                systemProperty "geb.env", 'firefox'
-                                systemProperty "geb.driver", 'org.openqa.selenium.firefox.FirefoxDriver'
-                                break
-                        }
-                    }
+                        GebEnvironmentTask gebEnvTask = tasks
+                                .withType(GebEnvironmentTask)
+                                .find { it.gebEnv == selectedBrowser } ?: firefoxTest as GebEnvironmentTask
 
+                        def testTask = tasks.getByName('test') as Test
+                        testTask.systemProperties(gebEnvTask.systemProperties)
+                    }
                 }
 
                 dependencies {
@@ -78,8 +69,9 @@ class GebPlugin implements Plugin<Project> {
 
             downloadChromeDriver = project.task(type: DownloadChromeDriverTask, DownloadChromeDriverTask.NAME)
             unzipChromeDriver = project.task(type: UnzipChromeDriverTask, UnzipChromeDriverTask.NAME)
-            chromeTest = project.task(type: SelectBrowserTask.SelectChromeTask, 'chromeTest')
-            firefoxTest = project.task(type: SelectBrowserTask.SelectFirefoxTask, 'firefoxTest')
+            chromeTest = project.task(type: GebEnvironmentTask.ChromeEnvironmentTask, 'chromeTest')
+            firefoxTest = project.task(type: GebEnvironmentTask.FirefoxEnvironmentTask, 'firefoxTest')
+            chromeDockerTest = project.task(type: GebEnvironmentTask.ChromeDockerEnvironmentTask, 'chromeDockerTest')
             unzipChromeDriver.outputs.upToDateWhen { false }
             chromeTest.dependsOn unzipChromeDriver
             unzipChromeDriver.dependsOn downloadChromeDriver
@@ -94,11 +86,10 @@ class GebPlugin implements Plugin<Project> {
                 geb.closeBrowser()
             }
         }
-
     }
 
     def groupTasks() {
-        def gebTasks = [chromeTest, firefoxTest, unzipChromeDriver, downloadChromeDriver]
+        def gebTasks = [chromeTest, chromeDockerTest, firefoxTest, unzipChromeDriver, downloadChromeDriver]
         gebTasks*.group = 'geb'
     }
 
