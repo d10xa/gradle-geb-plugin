@@ -55,4 +55,14 @@ class GebEnvironmentTask extends DefaultTask {
             ]
         }
     }
+
+    static class FirefoxDockerEnvironmentTask extends GebEnvironmentTask {
+        FirefoxDockerEnvironmentTask() {
+            gebEnv = "firefox_docker"
+            systemProperties = [
+                    "geb.env": 'firefox_docker'
+            ]
+        }
+    }
+
 }

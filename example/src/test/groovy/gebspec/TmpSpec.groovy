@@ -1,12 +1,12 @@
+package gebspec
+
 import geb.spock.GebSpec
 
 class TmpSpec extends GebSpec {
 
-    def indexHtml = "file://${System.getProperty('projectDir')}/site/index.html"
-
-    void 'tmp case'() {
+    def 'tmp case'() {
         when:
-        go indexHtml
+        go "/index.html"
 
         then:
         title == "test page"

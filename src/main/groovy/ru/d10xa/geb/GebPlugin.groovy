@@ -3,15 +3,21 @@ package ru.d10xa.geb
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.testing.Test
 
 class GebPlugin implements Plugin<Project> {
 
     Task chromeTest
     Task chromeDockerTest
+    Task firefoxDockerTest
     Task firefoxTest
     Task unzipChromeDriver
     Task downloadChromeDriver
+    Task stopDockerSeleniumChrome
+    Task stopDockerSeleniumFirefox
+    Task startDockerSeleniumChrome
+    Task startDockerSeleniumFirefox
 
     GebExtension geb
 
@@ -72,6 +78,31 @@ class GebPlugin implements Plugin<Project> {
             chromeTest = project.task(type: GebEnvironmentTask.ChromeEnvironmentTask, 'chromeTest')
             firefoxTest = project.task(type: GebEnvironmentTask.FirefoxEnvironmentTask, 'firefoxTest')
             chromeDockerTest = project.task(type: GebEnvironmentTask.ChromeDockerEnvironmentTask, 'chromeDockerTest')
+            firefoxDockerTest = project.task(type: GebEnvironmentTask.FirefoxDockerEnvironmentTask, 'firefoxDockerTest')
+            startDockerSeleniumChrome = project.task(type: Exec, 'startDockerSeleniumChrome') {
+                executable "sh"
+                args "-c", "docker run -p 4444:4444 -d --name selenium-chrome selenium/standalone-chrome:2.53.0"
+            }
+            stopDockerSeleniumChrome = project.task(type: Exec, 'stopDockerSeleniumChrome') {
+                executable "sh"
+                args "-c", "docker stop selenium-chrome && docker rm selenium-chrome"
+            }
+            startDockerSeleniumFirefox = project.task(type: Exec, 'startDockerSeleniumFirefox') {
+                executable "sh"
+                args "-c", "docker run -p 4444:4444 -d --name selenium-firefox selenium/standalone-firefox:2.53.0"
+            }
+            stopDockerSeleniumFirefox = project.task(type: Exec, 'stopDockerSeleniumFirefox') {
+                executable "sh"
+                args "-c", "docker stop selenium-firefox && docker rm selenium-firefox"
+            }
+            tasks.getByName('test').mustRunAfter 'startDockerSeleniumChrome', 'startDockerSeleniumFirefox'
+            stopDockerSeleniumChrome.mustRunAfter 'test'
+            stopDockerSeleniumFirefox.mustRunAfter 'test'
+            startDockerSeleniumChrome.finalizedBy 'stopDockerSeleniumChrome'
+            startDockerSeleniumFirefox.finalizedBy 'stopDockerSeleniumFirefox'
+            chromeDockerTest.dependsOn startDockerSeleniumChrome
+            firefoxDockerTest.dependsOn startDockerSeleniumFirefox
+
             unzipChromeDriver.outputs.upToDateWhen { false }
             chromeTest.dependsOn unzipChromeDriver
             unzipChromeDriver.dependsOn downloadChromeDriver
@@ -89,7 +120,18 @@ class GebPlugin implements Plugin<Project> {
     }
 
     def groupTasks() {
-        def gebTasks = [chromeTest, chromeDockerTest, firefoxTest, unzipChromeDriver, downloadChromeDriver]
+        def gebTasks = [
+                chromeTest,
+                chromeDockerTest,
+                firefoxDockerTest,
+                firefoxTest,
+                unzipChromeDriver,
+                downloadChromeDriver,
+                stopDockerSeleniumChrome,
+                stopDockerSeleniumFirefox,
+                startDockerSeleniumChrome,
+                startDockerSeleniumFirefox
+        ]
         gebTasks*.group = 'geb'
     }
 

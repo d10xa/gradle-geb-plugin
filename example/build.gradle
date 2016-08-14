@@ -1,4 +1,5 @@
 import ru.d10xa.geb.GebTask
+import ru.d10xa.geb.GebEnvironmentTask
 
 // Uncomment "mavenLocal()" and "classpath "ru.d10xa..." for development
 // For example:
@@ -12,8 +13,8 @@ buildscript {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:3600b727ca" // jitpack
-        // classpath "ru.d10xa:gradle-geb-plugin:1.0.5-SNAPSHOT"
+        classpath "ru.d10xa:gradle-geb-plugin:2.0.0-SNAPSHOT"
+        classpath "ru.d10xa:gradle-allure-plugin:0.5.2"
     }
 }
 
@@ -23,7 +24,14 @@ configurations.all {
 
 apply plugin: 'groovy'
 apply plugin: 'ru.d10xa.geb'
+apply plugin: 'ru.d10xa.allure'
 
+allure {
+    spock = true
+    geb = true
+}
+
+tasks.withType(Test)*.finalizedBy allureReport
 repositories {
     jcenter()
 }
@@ -50,4 +58,24 @@ wikipedia << {
     }
 }
 
-tasks.withType(Test)*.systemProperty ("projectDir", projectDir)
+task serverStart << {
+    def serverFactory = new SimpleHttpFileServerFactory()
+    def server = serverFactory.start(file("$projectDir/site"), 0)
+    ext.server = server
+}
+
+tasks.withType(GebEnvironmentTask)*.dependsOn 'serverStart'
+test.dependsOn 'serverStart'
+
+test {
+    doFirst {
+        systemProperty "gradleServerPort", serverStart.server.port
+    }
+}
+
+task serverStop << {
+    serverStart.server.stop()
+}
+
+serverStart.finalizedBy 'serverStop'
+test.finalizedBy 'serverStop'
