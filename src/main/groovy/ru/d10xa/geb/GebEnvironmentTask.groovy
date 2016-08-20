@@ -18,7 +18,7 @@ class GebEnvironmentTask extends DefaultTask {
     void executeAction() {
         this.project
                 .extensions.getByType(GebExtension)
-                .defaultTestBrowser = this.gebEnv
+                .gebEnv = this.gebEnv
     }
 
     void systemProperty(String k, String v) {

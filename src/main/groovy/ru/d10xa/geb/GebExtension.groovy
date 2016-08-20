@@ -16,12 +16,7 @@ class GebExtension {
     /**
      * https://sites.google.com/a/chromium.org/chromedriver/downloads
      */
-    def chromeDriverVersion = '2.22'
-
-    /**
-     * http://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all
-     */
-    def groovyVersion = '2.4.7'
+    def chromeDriverVersion = '2.23'
 
     /**
      * http://mvnrepository.com/artifact/org.gebish/geb-core
@@ -47,12 +42,7 @@ class GebExtension {
 
     int dockerStandaloneFirefoxPort = 4444
 
-    /**
-     * not implemented
-     */
-    def phantomJsVersion = '1.9.8'
-
-    def defaultTestBrowser
+    def gebEnv
 
     boolean usedBrowser = false
 
@@ -64,7 +54,7 @@ class GebExtension {
         if (!browser) {
             def config = new ChromeConfig(project: project)
             def driver = null
-            switch (project.extensions.getByType(GebExtension).defaultTestBrowser){
+            switch (project.extensions.getByType(GebExtension).gebEnv){
                 case 'chrome':
                     System.setProperty "geb.env", 'chrome'
                     System.setProperty "geb.driver", 'org.openqa.selenium.chrome.ChromeDriver'

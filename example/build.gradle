@@ -1,7 +1,7 @@
 import ru.d10xa.geb.GebTask
 import ru.d10xa.geb.GebEnvironmentTask
 
-// Uncomment "mavenLocal()" and "classpath "ru.d10xa..." for development
+// Uncomment "mavenLocal()" and "classpath "ru.d10xa...-SNAPSHOT" for development
 // For example:
 // ./gradlew clean build -x test publishToMavenLocal && ./gradlew -p example chromeTest
 
@@ -32,15 +32,21 @@ allure {
 }
 
 tasks.withType(Test)*.finalizedBy allureReport
+
 repositories {
     jcenter()
+}
+
+dependencies {
+    testCompile "org.codehaus.groovy:groovy-all:2.4.7"
 }
 
 geb {
     chromeDriverVersion = "2.22"
     gebVersion = '0.13.1'
     seleniumVersion = '2.53.1'
-    defaultTestBrowser = 'firefox'
+    gebEnv = 'firefox'
+    dockerStandaloneChromeVersion = '2.53.0'
 }
 
 task wikipedia(type: GebTask)

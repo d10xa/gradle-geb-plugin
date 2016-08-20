@@ -5,6 +5,10 @@
 [![Build Status](https://snap-ci.com/d10xa/gradle-geb-plugin/branch/master/build_image)](https://snap-ci.com/d10xa/gradle-geb-plugin/branch/master)
 [![jitpack](https://jitpack.io/v/ru.d10xa/gradle-geb-plugin.svg)](https://jitpack.io/#ru.d10xa/gradle-geb-plugin)
 
+## Getting Started
+
+Step 1: Apply the plugin to your Gradle build script
+
 ```groovy
 buildscript {
     repositories {
@@ -12,7 +16,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "ru.d10xa:gradle-geb-plugin:1.0.5"
+        classpath "ru.d10xa:gradle-geb-plugin:2.0.0"
     }
 }
 apply plugin: 'groovy'
@@ -21,16 +25,82 @@ apply plugin: 'ru.d10xa.geb'
 repositories {
     jcenter()
 }
-
+dependencies {
+    testCompile "org.codehaus.groovy:groovy-all:2.4.7"
+}
 // Optional
 geb {
-    chromeDriverVersion = '2.22'
-    groovyVersion = '2.4.7'
+    chromeDriverVersion = '2.23'
     gebVersion = '0.13.1'
     seleniumVersion = '2.53.1'
-    defaultTestBrowser = 'firefox'
-//  defaultTestBrowser = 'chrome'
+    gebEnv = 'firefox'
 }
 ```
 
-[read more at d10xa.ru](http://d10xa.ru/2015/09/geb-getting-started)
+Step 2: Create file 'src/test/resources/GebConfig.groovy'
+
+You can change baseUrl port in this snippet.
+`InetAddress.getLocalHost().getHostAddress()` used for connect to localhost from docker
+
+```groovy
+import org.openqa.selenium.chrome.ChromeDriver
+
+import org.openqa.selenium.remote.DesiredCapabilities
+import org.openqa.selenium.remote.RemoteWebDriver
+
+driver = { new ChromeDriver() }
+
+baseUrl = "http://${InetAddress.localHost.hostAddress}:8080"
+
+environments {
+
+    chrome_docker {
+        driver = {
+            def remoteWebDriverServerUrl = new URL("http://localhost:4444/wd/hub")
+            new RemoteWebDriver(remoteWebDriverServerUrl, DesiredCapabilities.chrome())
+        }
+    }
+
+    firefox_docker {
+        driver = {
+            def remoteWebDriverServerUrl = new URL("http://localhost:4444/wd/hub")
+            new RemoteWebDriver(remoteWebDriverServerUrl, DesiredCapabilities.firefox())
+        }
+    }
+
+}
+```
+
+## Configuration
+
+- `chromeDriverVersion` https://sites.google.com/a/chromium.org/chromedriver/downloads
+- `gebVersion` http://mvnrepository.com/artifact/org.gebish/geb-core
+- `seleniumVersion` http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api
+- `dockerStandaloneChromeVersion` https://hub.docker.com/r/selenium/standalone-chrome/
+- `dockerStandaloneFirefoxVersion` https://hub.docker.com/r/selenium/standalone-firefox/
+- `dockerStandaloneChromePort` (integer) default 4444
+- `dockerStandaloneFirefoxPort` (integer) default 4444
+- `gebEnv` (string) system property `geb.env` value. 
+Can be overridden by GebEnvironmentTask. Available values: chrome, firefox
+
+## Deprecations from 1.0.5
+
+### `groovyVersion` configuration property has been removed. 
+
+You need to explicitly add groovy dependency. 
+
+```gradle
+dependencies {
+    testCompile "org.codehaus.groovy:groovy-all:2.4.7"
+}
+```
+
+### Changed the logic of task execution
+
+Early tasks chromeTest, firefoxTest was inherited from Test. 
+Now it is configuration tasks only. Tests executes in `test' task.
+This was done for compatibility with IDE debugging.
+
+### Renamed property `defaultTestBrowser` to `gebEnv`
+
+Now gebEnv used to set the system property `geb.env` in tests.
