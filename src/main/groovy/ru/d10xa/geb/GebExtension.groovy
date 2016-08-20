@@ -38,9 +38,7 @@ class GebExtension {
      */
     def dockerStandaloneFirefoxVersion = "2.53.0"
 
-    int dockerStandaloneChromePort = 4444
-
-    int dockerStandaloneFirefoxPort = 4444
+    int seleniumPort = 4444
 
     def gebEnv
 

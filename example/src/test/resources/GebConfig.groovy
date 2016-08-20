@@ -23,4 +23,11 @@ environments {
         }
     }
 
+    my_custom_remote_firefox {
+        driver = {
+            def remoteWebDriverServerUrl = new URL("http://localhost:5555/wd/hub")
+            new RemoteWebDriver(remoteWebDriverServerUrl, DesiredCapabilities.firefox())
+        }
+    }
+
 }

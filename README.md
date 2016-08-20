@@ -78,10 +78,36 @@ environments {
 - `seleniumVersion` http://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api
 - `dockerStandaloneChromeVersion` https://hub.docker.com/r/selenium/standalone-chrome/
 - `dockerStandaloneFirefoxVersion` https://hub.docker.com/r/selenium/standalone-firefox/
-- `dockerStandaloneChromePort` (integer) default 4444
-- `dockerStandaloneFirefoxPort` (integer) default 4444
+- `seleniumPort` (integer) default 4444. Selenium docker exposed port.
 - `gebEnv` (string) system property `geb.env` value. 
 Can be overridden by GebEnvironmentTask. Available values: chrome, firefox
+
+## Custom geb.env
+
+If you need connection to your own selenium, you can define your own environment
+
+```groovy
+import org.openqa.selenium.remote.RemoteWebDriver
+baseUrl = "http://$InetAddress.localHost.hostAddress:8080"
+environments {
+    my_custom_remote_firefox {
+        driver = {
+            def remoteWebDriverServerUrl = new URL("http://localhost:5555/wd/hub")
+            new RemoteWebDriver(remoteWebDriverServerUrl, DesiredCapabilities.firefox())
+        }
+    }
+}
+
+```
+
+Then create new gradle task
+
+```gradle
+task myCustomRemoteFirefoxTest(type: GebEnvironmentTask) {
+    gebEnv = "my_custom_remote_firefox"
+    seleniumPort = 5555
+}
+```
 
 ## Deprecations from 1.0.5
 

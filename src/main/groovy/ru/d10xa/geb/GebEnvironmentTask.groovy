@@ -9,9 +9,15 @@ class GebEnvironmentTask extends DefaultTask {
 
     Map<String, String> systemProperties = new LinkedHashMap<>()
 
+    int seleniumPort
+
     GebEnvironmentTask() {
         this.outputs.upToDateWhen { false }
         this.finalizedBy 'test'
+    }
+
+    Map<String, String> getSystemProperties() {
+        this.@systemProperties + ['geb.env': gebEnv]
     }
 
     @TaskAction
@@ -29,7 +35,6 @@ class GebEnvironmentTask extends DefaultTask {
         FirefoxEnvironmentTask() {
             gebEnv = "firefox"
             systemProperties = [
-                    "geb.env"   : 'firefox',
                     "geb.driver": 'org.openqa.selenium.firefox.FirefoxDriver'
             ]
         }
@@ -39,7 +44,6 @@ class GebEnvironmentTask extends DefaultTask {
         ChromeEnvironmentTask() {
             gebEnv = "chrome"
             systemProperties = [
-                    "geb.env"                : 'chrome',
                     "geb.driver"             : 'org.openqa.selenium.chrome.ChromeDriver',
                     "webdriver.chrome.driver": new ChromeConfig(project: project).driverPath
 
@@ -50,18 +54,12 @@ class GebEnvironmentTask extends DefaultTask {
     static class ChromeDockerEnvironmentTask extends GebEnvironmentTask {
         ChromeDockerEnvironmentTask() {
             gebEnv = "chrome_docker"
-            systemProperties = [
-                    "geb.env": 'chrome_docker'
-            ]
         }
     }
 
     static class FirefoxDockerEnvironmentTask extends GebEnvironmentTask {
         FirefoxDockerEnvironmentTask() {
             gebEnv = "firefox_docker"
-            systemProperties = [
-                    "geb.env": 'firefox_docker'
-            ]
         }
     }
 

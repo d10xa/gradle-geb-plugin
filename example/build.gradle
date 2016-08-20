@@ -85,3 +85,8 @@ task serverStop << {
 
 serverStart.finalizedBy 'serverStop'
 test.finalizedBy 'serverStop'
+
+task myCustomRemoteFirefoxTest(type: GebEnvironmentTask) {
+    gebEnv = "my_custom_remote_firefox"
+    seleniumPort = 5555
+}

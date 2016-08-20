@@ -38,7 +38,7 @@ class GebPlugin implements Plugin<Project> {
                 firefoxDockerTest = project.task(type: GebEnvironmentTask.FirefoxDockerEnvironmentTask, 'firefoxDockerTest')
                 startDockerSeleniumChrome = project.task(type: Exec, 'startDockerSeleniumChrome') {
                     def image = "selenium/standalone-chrome:$geb.dockerStandaloneChromeVersion"
-                    def port = geb.dockerStandaloneChromePort
+                    def port = geb.seleniumPort
                     executable "sh"
                     args "-c", "docker run -p $port:4444 -d --name gradle-selenium-chrome $image"
                 }
@@ -48,7 +48,7 @@ class GebPlugin implements Plugin<Project> {
                 }
                 startDockerSeleniumFirefox = project.task(type: Exec, 'startDockerSeleniumFirefox') {
                     def image = "selenium/standalone-firefox:$geb.dockerStandaloneFirefoxVersion"
-                    def port = geb.dockerStandaloneFirefoxPort
+                    def port = geb.seleniumPort
                     executable "sh"
                     args "-c", "docker run -p $port:4444 -d --name gradle-selenium-firefox $image"
                 }
@@ -91,6 +91,7 @@ class GebPlugin implements Plugin<Project> {
 
                         def testTask = tasks.getByName('test') as Test
                         testTask.systemProperties(gebEnvTask.systemProperties)
+                        geb.seleniumPort = gebEnvTask.seleniumPort ?: geb.seleniumPort
                     }
                 }
 
