@@ -80,20 +80,28 @@ class GebPlugin implements Plugin<Project> {
             chromeDockerTest = project.task(type: GebEnvironmentTask.ChromeDockerEnvironmentTask, 'chromeDockerTest')
             firefoxDockerTest = project.task(type: GebEnvironmentTask.FirefoxDockerEnvironmentTask, 'firefoxDockerTest')
             startDockerSeleniumChrome = project.task(type: Exec, 'startDockerSeleniumChrome') {
-                executable "sh"
-                args "-c", "docker run -p 4444:4444 -d --name selenium-chrome selenium/standalone-chrome:2.53.0"
+                doFirst {
+                    def image = "selenium/standalone-chrome:$geb.dockerStandaloneChromeVersion"
+                    def port = geb.dockerStandaloneChromePort
+                    executable "sh"
+                    args "-c", "docker run -p $port:4444 -d --name gradle-selenium-chrome $image"
+                }
             }
             stopDockerSeleniumChrome = project.task(type: Exec, 'stopDockerSeleniumChrome') {
                 executable "sh"
-                args "-c", "docker stop selenium-chrome && docker rm selenium-chrome"
+                args "-c", "docker stop gradle-selenium-chrome && docker rm gradle-selenium-chrome"
             }
             startDockerSeleniumFirefox = project.task(type: Exec, 'startDockerSeleniumFirefox') {
-                executable "sh"
-                args "-c", "docker run -p 4444:4444 -d --name selenium-firefox selenium/standalone-firefox:2.53.0"
+                doFirst {
+                    def image = "selenium/standalone-firefox:$geb.dockerStandaloneChromeVersion"
+                    def port = geb.dockerStandaloneFirefoxPort
+                    executable "sh"
+                    args "-c", "docker run -p $port:4444 -d --name gradle-selenium-firefox $image"
+                }
             }
             stopDockerSeleniumFirefox = project.task(type: Exec, 'stopDockerSeleniumFirefox') {
                 executable "sh"
-                args "-c", "docker stop selenium-firefox && docker rm selenium-firefox"
+                args "-c", "docker stop gradle-selenium-firefox && docker rm gradle-selenium-firefox"
             }
             tasks.getByName('test').mustRunAfter 'startDockerSeleniumChrome', 'startDockerSeleniumFirefox'
             stopDockerSeleniumChrome.mustRunAfter 'test'

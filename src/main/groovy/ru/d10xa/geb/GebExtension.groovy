@@ -34,6 +34,20 @@ class GebExtension {
     def seleniumVersion = '2.53.1'
 
     /**
+     * https://hub.docker.com/r/selenium/standalone-chrome/
+     */
+    def dockerStandaloneChromeVersion = "2.53.0"
+
+    /**
+     * https://hub.docker.com/r/selenium/standalone-firefox/
+     */
+    def dockerStandaloneFirefoxVersion = "2.53.0"
+
+    int dockerStandaloneChromePort = 4444
+
+    int dockerStandaloneFirefoxPort = 4444
+
+    /**
      * not implemented
      */
     def phantomJsVersion = '1.9.8'
@@ -50,7 +64,7 @@ class GebExtension {
         if (!browser) {
             def config = new ChromeConfig(project: project)
             def driver = null
-            switch (project.extensions.getByType(ru.d10xa.geb.GebExtension).defaultTestBrowser){
+            switch (project.extensions.getByType(GebExtension).defaultTestBrowser){
                 case 'chrome':
                     System.setProperty "geb.env", 'chrome'
                     System.setProperty "geb.driver", 'org.openqa.selenium.chrome.ChromeDriver'
