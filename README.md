@@ -99,8 +99,6 @@ Runs a test with geb.env = firefox
 Runs a test with geb.env = chrome_docker.
 Starts [selenium/standalone-chrome](https://hub.docker.com/r/selenium/standalone-chrome/)
 
-Execution order: 
-
 ### firefoxDockerTest
 
 Runs a test with geb.env = firefox_docker
