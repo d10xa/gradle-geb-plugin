@@ -14,6 +14,6 @@ cache:
 deploy:
   skip_cleanup: true
   provider: script
-  script: ./gradlew bintrayUpload
+  script: ./gradlew bintrayUpload publishPlugins
   on:
     tags: true

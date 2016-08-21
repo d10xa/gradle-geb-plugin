@@ -1,4 +1,5 @@
 plugins {
+    id "com.gradle.plugin-publish" version "0.9.5"
     id 'groovy'
     id 'maven'
     id 'idea'
@@ -28,5 +29,19 @@ dependencies {
     compile 'org.seleniumhq.selenium:selenium-firefox-driver:2.53.1'
     testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
         exclude(module: 'groovy-all')
+    }
+}
+
+pluginBundle {
+    website = 'https://github.com/d10xa/gradle-geb-plugin'
+    vcsUrl = 'https://github.com/d10xa/gradle-geb-plugin'
+    tags = ['testing', 'geb', 'docker']
+
+    plugins {
+        gebPlugin {
+            id = 'ru.d10xa.geb'
+            description = "Adds tasks to test your app with Geb"
+            displayName = 'Gradle Geb plugin'
+        }
     }
 }
