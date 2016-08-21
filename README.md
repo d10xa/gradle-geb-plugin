@@ -82,6 +82,30 @@ environments {
 - `gebEnv` (string) system property `geb.env` value. 
 Can be overridden by GebEnvironmentTask. Available values: chrome, firefox
 
+## Tasks
+
+### chromeTest
+
+Runs a test with geb.env = chrome
+
+Depends on: downloadChromeDriver, unzipChromeDriver
+
+### firefoxTest
+
+Runs a test with geb.env = firefox
+
+### chromeDockerTest
+
+Runs a test with geb.env = chrome_docker.
+Starts [selenium/standalone-chrome](https://hub.docker.com/r/selenium/standalone-chrome/)
+
+Execution order: 
+
+### firefoxDockerTest
+
+Runs a test with geb.env = firefox_docker
+Starts [selenium/standalone-firefox](https://hub.docker.com/r/selenium/standalone-firefox/)
+
 ## Custom geb.env
 
 If you need connection to your own selenium, you can define your own environment
@@ -90,6 +114,9 @@ If you need connection to your own selenium, you can define your own environment
 import org.openqa.selenium.remote.RemoteWebDriver
 baseUrl = "http://$InetAddress.localHost.hostAddress:8080"
 environments {
+
+    // ... some environments here
+
     my_custom_remote_firefox {
         driver = {
             def remoteWebDriverServerUrl = new URL("http://localhost:5555/wd/hub")
@@ -124,7 +151,7 @@ dependencies {
 ### Changed the logic of task execution
 
 Early tasks chromeTest, firefoxTest was inherited from Test. 
-Now it is configuration tasks only. Tests executes in `test' task.
+Now it is configuration tasks only. Tests executes in `test` task.
 This was done for compatibility with IDE debugging.
 
 ### Renamed property `defaultTestBrowser` to `gebEnv`
