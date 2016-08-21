@@ -12,6 +12,7 @@ class GebEnvironmentTask extends DefaultTask {
     int seleniumPort
 
     GebEnvironmentTask() {
+        this.group = 'geb'
         this.outputs.upToDateWhen { false }
         this.finalizedBy 'test'
     }
