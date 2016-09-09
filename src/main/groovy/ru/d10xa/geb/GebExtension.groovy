@@ -16,7 +16,7 @@ class GebExtension {
     /**
      * https://sites.google.com/a/chromium.org/chromedriver/downloads
      */
-    def chromeDriverVersion = '2.23'
+    def chromeDriverVersion = '2.24'
 
     /**
      * http://mvnrepository.com/artifact/org.gebish/geb-core
