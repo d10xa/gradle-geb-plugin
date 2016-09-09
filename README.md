@@ -128,7 +128,7 @@ environments {
 Then create new gradle task
 
 ```gradle
-task myCustomRemoteFirefoxTest(type: GebEnvironmentTask) {
+task myCustomRemoteFirefoxTest(type: ru.d10xa.geb.GebEnvironmentTask) {
     gebEnv = "my_custom_remote_firefox"
     seleniumPort = 5555
 }
